@@ -4,6 +4,7 @@ import com.yash.CarPolling.entity.enums.RouteStatus;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 
 @Entity
@@ -16,7 +17,9 @@ public class Routes {
     private Vechile vechile;
     private User user;
     private String source;
-    private String place;
+
+
+    private List<PickUpPlaces> pickUpPlaces;
 
     @Temporal(TemporalType.TIME)
     private Date time;
@@ -31,13 +34,17 @@ public class Routes {
     @Enumerated(EnumType.STRING)
     private RouteStatus status;
 
-    public Routes(int routeId, Vechile vechile, User user, String source, String place, String destination) {
+    public Routes(int routeId, Vechile vechile, User user, String source, List<PickUpPlaces> pickUpPlaces, Date time, Date startDate, Date endDate, String destination, RouteStatus status) {
         this.routeId = routeId;
         this.vechile = vechile;
         this.user = user;
         this.source = source;
-        this.place = place;
+        this.pickUpPlaces = pickUpPlaces;
+        this.time = time;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.destination = destination;
+        this.status = status;
     }
 
     public Routes() {
@@ -75,12 +82,12 @@ public class Routes {
         this.source = source;
     }
 
-    public String getPlace() {
-        return place;
+    public List<PickUpPlaces> getPickUpPlaces() {
+        return pickUpPlaces;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
+    public void setPickUpPlaces(List<PickUpPlaces> pickUpPlaces) {
+        this.pickUpPlaces = pickUpPlaces;
     }
 
     public String getDestination() {
