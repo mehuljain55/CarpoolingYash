@@ -9,9 +9,11 @@ import com.yash.CarPolling.entity.models.UserLoginModel;
 import com.yash.CarPolling.repository.UserRepo;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UserAuthorizationService {
 
     @Autowired

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface VechileRepo extends JpaRepository<Vechile,String> {
 
-    @Query("SELECT v FROM Vechile v WHERE v.user.emailId = :emailId AND t.status = :status")
+    @Query("SELECT v FROM Vechile v WHERE v.user.emailId = :emailId AND v.status = :status")
     List<Vechile> findVechileByEmailAndStatus(@Param("emailId") String emailId, @Param("status") VechileStatus status);
 
 
