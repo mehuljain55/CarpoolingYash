@@ -32,6 +32,8 @@ public class Routes {
     @Enumerated(EnumType.STRING)
     private RouteStatus status;
 
+    private int cost;
+
     public Routes(int routeId, Vechile vechile, User user, String source, List<PickUpPlaces> pickUpPlaces, Date startDate, Date endDate, String destination, RouteStatus status) {
         this.routeId = routeId;
         this.vechile = vechile;
@@ -118,5 +120,13 @@ public class Routes {
 
     public void setStatus(RouteStatus status) {
         this.status = status;
+    }
+
+    public int getCost() { 
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 }

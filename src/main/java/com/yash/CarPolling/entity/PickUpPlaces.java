@@ -7,6 +7,7 @@ import java.util.Date;
 public class PickUpPlaces {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pickupId;
     private String places;
 
@@ -16,6 +17,16 @@ public class PickUpPlaces {
     @ManyToOne
     @JoinColumn(name = "route_id")
     private Routes routes;
+
+    public PickUpPlaces(int pickupId, String places, Date time, Routes routes) {
+        this.pickupId = pickupId;
+        this.places = places;
+        this.time = time;
+        this.routes = routes;
+    }
+
+    public PickUpPlaces() {
+    }
 
     public int getPickupId() {
         return pickupId;
