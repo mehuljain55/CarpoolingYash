@@ -1,0 +1,104 @@
+package com.yash.CarPolling.entity;
+
+import com.yash.CarPolling.entity.enums.UserRoles;
+import com.yash.CarPolling.entity.enums.UserStatus;
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name="user")
+public class User {
+
+    @Id
+    private String emailId;
+    private String name;
+    private String mobileNo;
+    private String password;
+    private String licenceNo;
+
+    @Enumerated(EnumType.STRING)
+    private UserRoles role;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Vechile> vechileList;
+
+    public User(String emailId, String name, String mobileNo, String password, UserRoles role, UserStatus status) {
+        this.emailId = emailId;
+        this.name = name;
+        this.mobileNo = mobileNo;
+        this.password = password;
+        this.role = role;
+        this.status = status;
+    }
+
+    public User() {
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public UserRoles getRole() {
+        return role;
+    }
+
+    public void setRole(UserRoles role) {
+        this.role = role;
+    }
+
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    public List<Vechile> getVechileList() {
+        return vechileList;
+    }
+
+    public void setVechileList(List<Vechile> vechileList) {
+        this.vechileList = vechileList;
+    }
+
+    public String getLicenceNo() {
+        return licenceNo;
+    }
+
+    public void setLicenceNo(String licenceNo) {
+        this.licenceNo = licenceNo;
+    }
+}

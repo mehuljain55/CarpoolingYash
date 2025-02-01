@@ -1,0 +1,74 @@
+package com.yash.CarPolling.entity;
+
+import com.yash.CarPolling.entity.enums.VechileStatus;
+import com.yash.CarPolling.entity.enums.VechileType;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="vechile")
+public class Vechile {
+
+    @Id
+    private String vechineNo;
+
+    private String rcPath;
+
+    @ManyToOne
+    @JoinColumn(name="user_email_id")
+    private User user;
+    @Enumerated(EnumType.STRING)
+    private VechileType vechileType;
+    @Enumerated(EnumType.STRING)
+    private VechileStatus status;
+
+
+
+    public Vechile(String vechineNo, User user, VechileType vechileType) {
+        this.vechineNo = vechineNo;
+        this.user = user;
+        this.vechileType = vechileType;
+    }
+
+    public Vechile() {
+    }
+
+    public String getVechineNo() {
+        return vechineNo;
+    }
+
+    public void setVechineNo(String vechineNo) {
+        this.vechineNo = vechineNo;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public VechileType getVechileType() {
+        return vechileType;
+    }
+
+    public void setVechileType(VechileType vechileType) {
+        this.vechileType = vechileType;
+    }
+
+    public String getRcPath() {
+        return rcPath;
+    }
+
+    public void setRcPath(String rcPath) {
+        this.rcPath = rcPath;
+    }
+
+    public VechileStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(VechileStatus status) {
+        this.status = status;
+    }
+}
