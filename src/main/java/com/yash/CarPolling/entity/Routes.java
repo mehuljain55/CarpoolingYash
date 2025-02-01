@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
 @Entity
 @Table(name="routes")
@@ -19,10 +18,9 @@ public class Routes {
     private String source;
 
 
+    @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PickUpPlaces> pickUpPlaces;
 
-    @Temporal(TemporalType.TIME)
-    private Date time;
 
     @Temporal(TemporalType.DATE)
     private Date startDate;
@@ -34,13 +32,12 @@ public class Routes {
     @Enumerated(EnumType.STRING)
     private RouteStatus status;
 
-    public Routes(int routeId, Vechile vechile, User user, String source, List<PickUpPlaces> pickUpPlaces, Date time, Date startDate, Date endDate, String destination, RouteStatus status) {
+    public Routes(int routeId, Vechile vechile, User user, String source, List<PickUpPlaces> pickUpPlaces, Date startDate, Date endDate, String destination, RouteStatus status) {
         this.routeId = routeId;
         this.vechile = vechile;
         this.user = user;
         this.source = source;
         this.pickUpPlaces = pickUpPlaces;
-        this.time = time;
         this.startDate = startDate;
         this.endDate = endDate;
         this.destination = destination;
@@ -98,13 +95,6 @@ public class Routes {
         this.destination = destination;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     public Date getStartDate() {
         return startDate;

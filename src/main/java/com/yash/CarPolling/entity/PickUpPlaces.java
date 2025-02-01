@@ -1,8 +1,6 @@
 package com.yash.CarPolling.entity;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
@@ -15,6 +13,8 @@ public class PickUpPlaces {
     @Temporal(TemporalType.TIME)
     private Date time;
 
+    @ManyToOne
+    @JoinColumn(name = "route_id")
     private Routes routes;
 
     public int getPickupId() {
