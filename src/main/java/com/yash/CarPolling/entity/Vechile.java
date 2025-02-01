@@ -20,6 +20,7 @@ public class Vechile {
     private VechileType vechileType;
     @Enumerated(EnumType.STRING)
     private VechileStatus status;
+    private  int capacity;
 
 
 
@@ -70,5 +71,13 @@ public class Vechile {
 
     public void setStatus(VechileStatus status) {
         this.status = status;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
     }
 }

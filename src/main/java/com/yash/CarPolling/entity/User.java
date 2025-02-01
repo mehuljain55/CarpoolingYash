@@ -26,6 +26,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Vechile> vechileList;
 
+    private String officeId;
+
     public User(String emailId, String name, String mobileNo, String password, UserRoles role, UserStatus status) {
         this.emailId = emailId;
         this.name = name;
@@ -100,5 +102,13 @@ public class User {
 
     public void setLicenceNo(String licenceNo) {
         this.licenceNo = licenceNo;
+    }
+
+    public String getOfficeId() {
+        return officeId;
+    }
+
+    public void setOfficeId(String officeId) {
+        this.officeId = officeId;
     }
 }
