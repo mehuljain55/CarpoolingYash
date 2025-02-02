@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+@Entity
+@Table(name="pick_up_point")
 public class PickUpPlaces {
 
     @Id

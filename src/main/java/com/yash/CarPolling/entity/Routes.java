@@ -13,7 +13,11 @@ public class Routes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int routeId;
+
+    @OneToOne
     private Vechile vechile;
+
+    @OneToOne
     private User user;
     private String source;
 

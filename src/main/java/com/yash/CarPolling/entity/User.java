@@ -17,6 +17,10 @@ public class User {
     private String password;
     private String licenceNo;
 
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Bookings bookings;
+
     @Enumerated(EnumType.STRING)
     private UserRoles role;
 
