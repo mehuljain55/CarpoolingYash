@@ -24,7 +24,7 @@ public class VechileService {
 
             if(optionalVechile.isPresent())
             {
-                return new ApiResponseModel(StatusResponse.failed,null,"Vehile Already exists");
+                return new ApiResponseModel(StatusResponse.failed,null,"Vechile Already exists");
             }
 
             vechile.setUser(user);

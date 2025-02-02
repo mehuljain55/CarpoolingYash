@@ -10,7 +10,6 @@ public class Vechile {
 
     @Id
     private String vechineNo;
-
     private String rcPath;
 
     @ManyToOne
@@ -22,12 +21,13 @@ public class Vechile {
     private VechileStatus status;
     private  int capacity;
 
-
-
-    public Vechile(String vechineNo, User user, VechileType vechileType) {
+    public Vechile(String vechineNo, String rcPath, User user, VechileType vechileType, VechileStatus status, int capacity) {
         this.vechineNo = vechineNo;
+        this.rcPath = rcPath;
         this.user = user;
         this.vechileType = vechileType;
+        this.status = status;
+        this.capacity = capacity;
     }
 
     public Vechile() {
