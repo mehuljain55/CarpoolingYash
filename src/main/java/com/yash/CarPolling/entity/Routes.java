@@ -17,10 +17,8 @@ public class Routes {
     private User user;
     private String source;
 
-
-    @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PickUpPlaces> pickUpPlaces;
-
 
     @Temporal(TemporalType.DATE)
     private Date startDate;

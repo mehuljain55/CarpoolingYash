@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class Vechile {
 
     @Id
-    private String vechineNo;
+    private String vechileNo;
     private String rcPath;
 
     @ManyToOne
@@ -19,26 +19,28 @@ public class Vechile {
     private VechileType vechileType;
     @Enumerated(EnumType.STRING)
     private VechileStatus status;
-    private  int capacity;
+    private  int max_capacity;
+    private int  available_capacity;
 
-    public Vechile(String vechineNo, String rcPath, User user, VechileType vechileType, VechileStatus status, int capacity) {
-        this.vechineNo = vechineNo;
+    public Vechile(String vechileNo, String rcPath, User user, VechileType vechileType, VechileStatus status, int max_capacity, int available_capacity) {
+        this.vechileNo = vechileNo;
         this.rcPath = rcPath;
         this.user = user;
         this.vechileType = vechileType;
         this.status = status;
-        this.capacity = capacity;
+        this.max_capacity = max_capacity;
+        this.available_capacity = available_capacity;
     }
 
     public Vechile() {
     }
 
-    public String getVechineNo() {
-        return vechineNo;
+    public String getVechileNo() {
+        return vechileNo;
     }
 
-    public void setVechineNo(String vechineNo) {
-        this.vechineNo = vechineNo;
+    public void setVechileNo(String vechileNo) {
+        this.vechileNo = vechileNo;
     }
 
     public User getUser() {
@@ -73,11 +75,19 @@ public class Vechile {
         this.status = status;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getMax_capacity() {
+        return max_capacity;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public void setMax_capacity(int max_capacity) {
+        this.max_capacity = max_capacity;
+    }
+
+    public int getAvailable_capacity() {
+        return available_capacity;
+    }
+
+    public void setAvailable_capacity(int available_capacity) {
+        this.available_capacity = available_capacity;
     }
 }
