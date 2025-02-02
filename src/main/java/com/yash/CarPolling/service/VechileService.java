@@ -20,7 +20,7 @@ public class VechileService {
     public ApiResponseModel addVechile(Vechile vechile, User user)
     {
         try {
-            Optional<Vechile> optionalVechile=vechileRepo.findById(vechile.getVechineNo());
+            Optional<Vechile> optionalVechile=vechileRepo.findById(vechile.getVechileNo());
 
             if(optionalVechile.isPresent())
             {
