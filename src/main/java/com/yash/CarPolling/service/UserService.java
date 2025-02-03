@@ -62,7 +62,7 @@ public class UserService {
         Path filePath = Paths.get(LICENCE_DIR + emailId + ".jpg");
         Files.write(filePath, file.getBytes());
 
-        return filePath.toAbsolutePath().toString(); // Return exact file path
+        return filePath.toAbsolutePath().toString();
     }
 
 }
