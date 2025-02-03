@@ -11,7 +11,10 @@ public class Bookings {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookingId;
+    @OneToOne
     private Routes routes;
+
+    @OneToMany(mappedBy = "bookings", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> users;
 
     public Bookings(int bookingId, Routes routes, List<User> users) {

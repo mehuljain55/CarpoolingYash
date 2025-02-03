@@ -37,5 +37,4 @@ public class VechileService {
             return  new ApiResponseModel<>(StatusResponse.failed,null,"Error in adding vechile");
         }
     }
-
 }
