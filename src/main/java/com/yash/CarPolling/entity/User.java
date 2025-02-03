@@ -1,5 +1,6 @@
 package com.yash.CarPolling.entity;
 
+import com.yash.CarPolling.entity.enums.DocumentStatus;
 import com.yash.CarPolling.entity.enums.UserRoles;
 import com.yash.CarPolling.entity.enums.UserStatus;
 import jakarta.persistence.*;
@@ -16,6 +17,9 @@ public class User {
     private String mobileNo;
     private String password;
     private String licenceNo;
+    private DocumentStatus licence;
+    private String licencePath;
+
 
     @ManyToOne
     @JoinColumn(name = "booking_id")
@@ -114,5 +118,29 @@ public class User {
 
     public void setOfficeId(String officeId) {
         this.officeId = officeId;
+    }
+
+    public DocumentStatus getLicence() {
+        return licence;
+    }
+
+    public void setLicence(DocumentStatus licence) {
+        this.licence = licence;
+    }
+
+    public Bookings getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(Bookings bookings) {
+        this.bookings = bookings;
+    }
+
+    public String getLicencePath() {
+        return licencePath;
+    }
+
+    public void setLicencePath(String licencePath) {
+        this.licencePath = licencePath;
     }
 }
