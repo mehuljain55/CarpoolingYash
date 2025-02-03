@@ -19,9 +19,8 @@ public class UserController {
     }
 
     @GetMapping("/validateLogin")
-    private ApiResponseModel validateUserLogin(@RequestParam("emailId") String emailId, @RequestParam("password") String password)
-    {
-        return userAuthorizationService.validateUserLogin(emailId,password);
+    public ApiResponseModel validateUserLogin(@RequestParam("emailId") String emailId, @RequestParam("password") String password) {
+        return userAuthorizationService.validateUserLogin(emailId, password);
     }
 
 
