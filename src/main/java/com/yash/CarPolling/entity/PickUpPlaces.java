@@ -1,5 +1,6 @@
 package com.yash.CarPolling.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -13,14 +14,14 @@ public class PickUpPlaces {
     private int pickupId;
     private String places;
 
-    @Temporal(TemporalType.TIME)
-    private Date time;
+    private String time;
 
     @ManyToOne
     @JoinColumn(name = "route_id")
+    @JsonBackReference
     private Routes routes;
 
-    public PickUpPlaces(int pickupId, String places, Date time, Routes routes) {
+    public PickUpPlaces(int pickupId, String places, String time, Routes routes) {
         this.pickupId = pickupId;
         this.places = places;
         this.time = time;
@@ -46,11 +47,11 @@ public class PickUpPlaces {
         this.places = places;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

@@ -3,6 +3,7 @@ package com.yash.CarPolling.controller;
 import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.enums.StatusResponse;
 import com.yash.CarPolling.entity.models.ApiRequestModel;
+import com.yash.CarPolling.entity.models.ApiRequestModelBooking;
 import com.yash.CarPolling.entity.models.ApiRequestModelRoutes;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
 import com.yash.CarPolling.service.UserAuthorizationService;
@@ -29,18 +30,33 @@ public class UserController {
 
     @GetMapping("/login")
     public ApiResponseModel validateUserLogin(@RequestParam("emailId") String emailId, @RequestParam("password") String password) {
+      ApiResponseModel apiResponseModel=userAuthorizationService.validateUserLogin(emailId,password);
+
         return userAuthorizationService.validateUserLogin(emailId, password);
     }
 
     @PostMapping("/addRoute")
     public ApiResponseModel addRoute(@RequestBody ApiRequestModelRoutes apiRequestModelRoutes) {
+        System.out.println(apiRequestModelRoutes);
         boolean status=userAuthorizationService.validateUserToken(apiRequestModelRoutes.getUser().getEmailId(),apiRequestModelRoutes.getToken());
         if(status)
         {
-            return  vechileService.findVechileByUserandStatus(apiRequestModel.getUser(),apiRequestModel.getVechileStatus());
+            return  userService.addRoutes(apiRequestModelRoutes.getUser(),apiRequestModelRoutes.getRoutes(),"MP09FG4343");
         }else {
             return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
         }
     }
+
+    @GetMapping ("/findRoutes")
+    public ApiResponseModel findRoutes(@RequestParam("source") String source,
+                                       @RequestParam("destination") String destination) {
+        return  userService.findRoutes(source,destination);
+    }
+
+    public ApiResponseModel userBooking(@RequestBody ApiRequestModelBooking apiRequestModelBooking)
+    {
+
+    }
+
 
 }

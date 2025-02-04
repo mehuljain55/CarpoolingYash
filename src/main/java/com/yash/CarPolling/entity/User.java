@@ -1,5 +1,7 @@
 package com.yash.CarPolling.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yash.CarPolling.entity.enums.DocumentStatus;
 import com.yash.CarPolling.entity.enums.UserRoles;
 import com.yash.CarPolling.entity.enums.UserStatus;
@@ -24,6 +26,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "booking_id")
+    @JsonBackReference
     private Bookings bookings;
 
     @Enumerated(EnumType.STRING)
@@ -33,6 +36,7 @@ public class User {
     private UserStatus status;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Vechile> vechileList;
 
     private String officeId;

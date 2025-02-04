@@ -1,11 +1,17 @@
 package com.yash.CarPolling.service;
 
+import com.yash.CarPolling.entity.PickUpPlaces;
+import com.yash.CarPolling.entity.Routes;
 import com.yash.CarPolling.entity.User;
+import com.yash.CarPolling.entity.Vechile;
 import com.yash.CarPolling.entity.enums.DocumentStatus;
+import com.yash.CarPolling.entity.enums.RouteStatus;
 import com.yash.CarPolling.entity.enums.StatusResponse;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
+import com.yash.CarPolling.repository.PickUpPlacesRepo;
+import com.yash.CarPolling.repository.RoutesRepo;
 import com.yash.CarPolling.repository.UserRepo;
-import jdk.swing.interop.SwingInterOpUtils;
+import com.yash.CarPolling.repository.VechileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +21,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +33,15 @@ public class UserService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private VechileRepo vechileRepo;
+
+    @Autowired
+    private RoutesRepo routesRepo;
+
+    @Autowired
+    private PickUpPlacesRepo pickUpPlacesRepo;
 
 
     private static final String LICENCE_DIR = "src/main/resources/Licence/";
@@ -55,6 +72,48 @@ public class UserService {
             e.printStackTrace();
             return new ApiResponseModel<>(StatusResponse.failed,null,"Unable to add user");
         }
+    }
+
+    public ApiResponseModel addRoutes(User user, Routes routes,String vechileNo)
+    {
+        Optional<Vechile> vechileOptional=vechileRepo.findById(vechileNo);
+        try {
+            Vechile vechile=vechileOptional.get();
+            List<PickUpPlaces> pickUpPlacesList=routes.getPickUpPlaces();
+            routes.setPickUpPlaces(null);
+            routes.setVechile(vechile);
+            routes.setUser(user);
+            Routes saveRoute=routesRepo.save(routes);
+            for(PickUpPlaces place:pickUpPlacesList)
+            {
+                place.setRoutes(saveRoute);
+                pickUpPlacesRepo.save(place);
+            }
+
+            System.out.println("Route saved");
+            return  new ApiResponseModel<>(StatusResponse.success,null,"Routes added");
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return  new ApiResponseModel<>(StatusResponse.failed,null,"Unable to add routes");
+        }
+    }
+
+    public  ApiResponseModel findRoutes(String source,String destination)
+    {
+        List<Routes> routesList=routesRepo.findRouteBySourceDestination(source,destination);
+
+        List<Routes> routes=new ArrayList<>();
+
+        for(Routes route: routesList)
+        {
+          Vechile vechile=routesRepo.findVechileByRouteNo(route.getRouteId());
+          route.setVechile(vechile);
+          routes.add(route);
+        }
+
+        return new ApiResponseModel<>(StatusResponse.success,routes,"Routes Found");
     }
 
 

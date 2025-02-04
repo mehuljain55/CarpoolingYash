@@ -50,4 +50,14 @@ public class ApiRequestModelRoutes {
     public void setVechileNo(String vechileNo) {
         this.vechileNo = vechileNo;
     }
+
+    @Override
+    public String toString() {
+        return "ApiRequestModelRoutes{" +
+                "user=" + user +
+                ", token='" + token + '\'' +
+                ", routes=" + routes +
+                ", vechileNo='" + vechileNo + '\'' +
+                '}';
+    }
 }

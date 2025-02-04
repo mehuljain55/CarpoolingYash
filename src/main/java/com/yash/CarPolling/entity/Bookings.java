@@ -1,5 +1,6 @@
 package com.yash.CarPolling.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class Bookings {
     private Routes routes;
 
     @OneToMany(mappedBy = "bookings", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<User> users;
 
     public Bookings(int bookingId, Routes routes, List<User> users) {

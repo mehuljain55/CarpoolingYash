@@ -1,5 +1,6 @@
 package com.yash.CarPolling.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.yash.CarPolling.entity.enums.RouteStatus;
 import jakarta.persistence.*;
 
@@ -20,16 +21,17 @@ public class Routes {
     @OneToOne
     private User user;
     private String source;
+    private String destination;
+
 
     @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<PickUpPlaces> pickUpPlaces;
 
     @Temporal(TemporalType.DATE)
     private Date startDate;
     @Temporal(TemporalType.DATE)
     private Date endDate;
-
-    private String destination;
 
     @Enumerated(EnumType.STRING)
     private RouteStatus status;

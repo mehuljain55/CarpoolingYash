@@ -1,5 +1,6 @@
 package com.yash.CarPolling.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.yash.CarPolling.entity.enums.DocumentStatus;
 import com.yash.CarPolling.entity.enums.VechileStatus;
 import com.yash.CarPolling.entity.enums.VechileType;
@@ -16,6 +17,7 @@ public class Vechile {
 
     @ManyToOne
     @JoinColumn(name="user_email_id")
+    @JsonBackReference
     private User user;
     @Enumerated(EnumType.STRING)
     private VechileType vechileType;

@@ -47,8 +47,8 @@ public class VechileService {
             }else{
                 vechile.setRc_status(DocumentStatus.not_updated);
             }
-
             vechile.setUser(user);
+            vechile.setAvailable_capacity(vechile.getMax_capacity());
             vechile.setStatus(VechileStatus.pending);
             vechileRepo.save(vechile);
             return new ApiResponseModel<>(StatusResponse.success,null,"Vechile Added");
