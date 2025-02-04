@@ -35,6 +35,8 @@ public class UserAuthorizationService {
             user.setRole(UserRoles.user);
             user.setStatus(UserStatus.not_active);
             user.setPassword(hashPassword(user.getPassword()));
+            user.setOfficeId("YIT");
+            System.out.println(user);
             userRepo.save(user);
             return new ApiResponseModel(StatusResponse.success,null ,"Trainer Added");
         }catch (Exception e)

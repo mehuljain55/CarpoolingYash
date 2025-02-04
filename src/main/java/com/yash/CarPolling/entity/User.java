@@ -17,6 +17,7 @@ public class User {
     private String mobileNo;
     private String password;
     private String licenceNo;
+    @Enumerated(EnumType.STRING)
     private DocumentStatus licence;
     private String licencePath;
 
@@ -36,13 +37,19 @@ public class User {
 
     private String officeId;
 
-    public User(String emailId, String name, String mobileNo, String password, UserRoles role, UserStatus status) {
+    public User(String emailId, String name, String mobileNo, String password, String licenceNo, DocumentStatus licence, String licencePath, Bookings bookings, UserRoles role, UserStatus status, List<Vechile> vechileList, String officeId) {
         this.emailId = emailId;
         this.name = name;
         this.mobileNo = mobileNo;
         this.password = password;
+        this.licenceNo = licenceNo;
+        this.licence = licence;
+        this.licencePath = licencePath;
+        this.bookings = bookings;
         this.role = role;
         this.status = status;
+        this.vechileList = vechileList;
+        this.officeId = officeId;
     }
 
     public User() {
@@ -142,5 +149,23 @@ public class User {
 
     public void setLicencePath(String licencePath) {
         this.licencePath = licencePath;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "emailId='" + emailId + '\'' +
+                ", name='" + name + '\'' +
+                ", mobileNo='" + mobileNo + '\'' +
+                ", password='" + password + '\'' +
+                ", licenceNo='" + licenceNo + '\'' +
+                ", licence=" + licence +
+                ", licencePath='" + licencePath + '\'' +
+                ", bookings=" + bookings +
+                ", role=" + role +
+                ", status=" + status +
+                ", vechileList=" + vechileList +
+                ", officeId='" + officeId + '\'' +
+                '}';
     }
 }

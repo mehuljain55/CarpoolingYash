@@ -1,5 +1,6 @@
 package com.yash.CarPolling.entity;
 
+import com.yash.CarPolling.entity.enums.DocumentStatus;
 import com.yash.CarPolling.entity.enums.VechileStatus;
 import com.yash.CarPolling.entity.enums.VechileType;
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ public class Vechile {
 
     @Id
     private String vechileNo;
+    private String vechileName;
     private String rcPath;
 
     @ManyToOne
@@ -21,6 +23,7 @@ public class Vechile {
     private VechileStatus status;
     private  int max_capacity;
     private int  available_capacity;
+    private DocumentStatus rc_status;
 
     public Vechile(String vechileNo, String rcPath, User user, VechileType vechileType, VechileStatus status, int max_capacity, int available_capacity) {
         this.vechileNo = vechileNo;
@@ -89,5 +92,21 @@ public class Vechile {
 
     public void setAvailable_capacity(int available_capacity) {
         this.available_capacity = available_capacity;
+    }
+
+    public DocumentStatus getRc_status() {
+        return rc_status;
+    }
+
+    public void setRc_status(DocumentStatus rc_status) {
+        this.rc_status = rc_status;
+    }
+
+    public String getVechileName() {
+        return vechileName;
+    }
+
+    public void setVechileName(String vechileName) {
+        this.vechileName = vechileName;
     }
 }

@@ -1,6 +1,9 @@
 package com.yash.CarPolling.controller;
 
 import com.yash.CarPolling.entity.User;
+import com.yash.CarPolling.entity.enums.StatusResponse;
+import com.yash.CarPolling.entity.models.ApiRequestModel;
+import com.yash.CarPolling.entity.models.ApiRequestModelRoutes;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
 import com.yash.CarPolling.service.UserAuthorizationService;
 import com.yash.CarPolling.service.UserService;
@@ -24,10 +27,20 @@ public class UserController {
         return userService.addUser(user,licenceImage);
     }
 
-    @GetMapping("/validateLogin")
+    @GetMapping("/login")
     public ApiResponseModel validateUserLogin(@RequestParam("emailId") String emailId, @RequestParam("password") String password) {
         return userAuthorizationService.validateUserLogin(emailId, password);
     }
 
+    @PostMapping("/addRoute")
+    public ApiResponseModel addRoute(@RequestBody ApiRequestModelRoutes apiRequestModelRoutes) {
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModelRoutes.getUser().getEmailId(),apiRequestModelRoutes.getToken());
+        if(status)
+        {
+            return  vechileService.findVechileByUserandStatus(apiRequestModel.getUser(),apiRequestModel.getVechileStatus());
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
 
 }
