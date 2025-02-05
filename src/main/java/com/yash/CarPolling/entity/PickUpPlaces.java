@@ -3,7 +3,6 @@ package com.yash.CarPolling.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.Date;
 
 @Entity
 @Table(name="pick_up_point")
@@ -13,6 +12,7 @@ public class PickUpPlaces {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pickupId;
     private String places;
+    private String city;
 
     private String time;
 
@@ -61,5 +61,13 @@ public class PickUpPlaces {
 
     public void setRoutes(Routes routes) {
         this.routes = routes;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

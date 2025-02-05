@@ -1,8 +1,6 @@
 package com.yash.CarPolling.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="offices")
@@ -12,14 +10,18 @@ public class Office {
     private String officeId;
     private String officeName;
     private String officeAddress;
+    private String city;
 
-    public Office(String officeId, String officeName, String officeAddress) {
+
+
+    public Office() {
+    }
+
+    public Office(String officeId, String officeName, String officeAddress, String city) {
         this.officeId = officeId;
         this.officeName = officeName;
         this.officeAddress = officeAddress;
-    }
-
-    public Office() {
+        this.city = city;
     }
 
     public String getOfficeId() {
@@ -45,5 +47,14 @@ public class Office {
     public void setOfficeAddress(String officeAddress) {
         this.officeAddress = officeAddress;
     }
-}
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+
+}

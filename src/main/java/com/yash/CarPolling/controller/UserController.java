@@ -2,10 +2,9 @@ package com.yash.CarPolling.controller;
 
 import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.enums.StatusResponse;
-import com.yash.CarPolling.entity.models.ApiRequestModel;
 import com.yash.CarPolling.entity.models.ApiRequestModelBooking;
-import com.yash.CarPolling.entity.models.ApiRequestModelRoutes;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
+import com.yash.CarPolling.service.OfficeService;
 import com.yash.CarPolling.service.UserAuthorizationService;
 import com.yash.CarPolling.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,40 +21,41 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OfficeService officeService;
+
     @PostMapping("/register")
     public ApiResponseModel<String> userRegistration(@RequestPart("user") User user,
+                                                     @RequestPart("officeId") String officeId,
                                                      @RequestPart(value = "licenceImage", required = false) MultipartFile licenceImage){
-        return userService.addUser(user,licenceImage);
+        return userService.addUser(user,officeId,licenceImage);
     }
 
     @GetMapping("/login")
     public ApiResponseModel validateUserLogin(@RequestParam("emailId") String emailId, @RequestParam("password") String password) {
-      ApiResponseModel apiResponseModel=userAuthorizationService.validateUserLogin(emailId,password);
-
         return userAuthorizationService.validateUserLogin(emailId, password);
     }
 
-    @PostMapping("/addRoute")
-    public ApiResponseModel addRoute(@RequestBody ApiRequestModelRoutes apiRequestModelRoutes) {
-        System.out.println(apiRequestModelRoutes);
-        boolean status=userAuthorizationService.validateUserToken(apiRequestModelRoutes.getUser().getEmailId(),apiRequestModelRoutes.getToken());
+
+    @GetMapping("/officeList")
+    public ApiResponseModel validateUserLogin() {
+        return officeService.officeList();
+    }
+
+
+
+
+
+    @PostMapping("/createBooking")
+    public ApiResponseModel createBooking(@RequestBody ApiRequestModelBooking apiRequestModelBooking) {
+
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModelBooking.getUser().getEmailId(),apiRequestModelBooking.getToken());
         if(status)
         {
-            return  userService.addRoutes(apiRequestModelRoutes.getUser(),apiRequestModelRoutes.getRoutes(),"MP09FG4343");
+            return  userService.createBooking(apiRequestModelBooking.getRouteId(),apiRequestModelBooking.getUser());
         }else {
             return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
         }
-    }
-
-    @GetMapping ("/findRoutes")
-    public ApiResponseModel findRoutes(@RequestParam("source") String source,
-                                       @RequestParam("destination") String destination) {
-        return  userService.findRoutes(source,destination);
-    }
-
-    public ApiResponseModel userBooking(@RequestBody ApiRequestModelBooking apiRequestModelBooking)
-    {
-
     }
 
 

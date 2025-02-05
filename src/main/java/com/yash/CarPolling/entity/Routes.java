@@ -22,9 +22,10 @@ public class Routes {
     private User user;
     private String source;
     private String destination;
+    private String city;
 
 
-    @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<PickUpPlaces> pickUpPlaces;
 
@@ -132,5 +133,13 @@ public class Routes {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

@@ -1,17 +1,11 @@
 package com.yash.CarPolling.service;
 
-import com.yash.CarPolling.entity.PickUpPlaces;
-import com.yash.CarPolling.entity.Routes;
-import com.yash.CarPolling.entity.User;
-import com.yash.CarPolling.entity.Vechile;
+import com.yash.CarPolling.entity.*;
 import com.yash.CarPolling.entity.enums.DocumentStatus;
 import com.yash.CarPolling.entity.enums.RouteStatus;
 import com.yash.CarPolling.entity.enums.StatusResponse;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
-import com.yash.CarPolling.repository.PickUpPlacesRepo;
-import com.yash.CarPolling.repository.RoutesRepo;
-import com.yash.CarPolling.repository.UserRepo;
-import com.yash.CarPolling.repository.VechileRepo;
+import com.yash.CarPolling.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,11 +37,17 @@ public class UserService {
     @Autowired
     private PickUpPlacesRepo pickUpPlacesRepo;
 
+    @Autowired
+    private BookingRepo bookingRepo;
+
+    @Autowired
+    private OfficeRepo officeRepo;
+
 
     private static final String LICENCE_DIR = "src/main/resources/Licence/";
 
 
-    public ApiResponseModel addUser(User user, MultipartFile file)
+    public ApiResponseModel addUser(User user,String officeId, MultipartFile file)
     {
         Optional<User> userOptional=userRepo.findById(user.getEmailId());
         if(userOptional.isPresent())
@@ -59,12 +59,12 @@ public class UserService {
             if(file!=null) {
                 System.out.println("Image Upload");
                 String path= saveLicenceImage(file, user.getEmailId());
-               user.setLicencePath(path);
-               user.setLicence(DocumentStatus.updated);
+                user.setLicencePath(path);
+                user.setLicence(DocumentStatus.updated);
             }else {
                 user.setLicence(DocumentStatus.not_updated);
             }
-        ApiResponseModel apiResponseModel=userAuthorizationService.addUser(user);
+            ApiResponseModel apiResponseModel=userAuthorizationService.addUser(user,officeId);
             return apiResponseModel;
 
         }catch (Exception e)
@@ -81,11 +81,17 @@ public class UserService {
             Vechile vechile=vechileOptional.get();
             List<PickUpPlaces> pickUpPlacesList=routes.getPickUpPlaces();
             routes.setPickUpPlaces(null);
+            String route_source=routes.getSource().toUpperCase();
+            String destination=routes.getDestination().toUpperCase();
+            routes.setSource(route_source);
+            routes.setDestination(destination);
             routes.setVechile(vechile);
             routes.setUser(user);
             Routes saveRoute=routesRepo.save(routes);
             for(PickUpPlaces place:pickUpPlacesList)
             {
+                String source=place.getPlaces();
+                place.setPlaces(source.toUpperCase());
                 place.setRoutes(saveRoute);
                 pickUpPlacesRepo.save(place);
             }
@@ -100,9 +106,9 @@ public class UserService {
         }
     }
 
-    public  ApiResponseModel findRoutes(String source,String destination)
+    public  ApiResponseModel findRoutes(String source,String destination,String city)
     {
-        List<Routes> routesList=routesRepo.findRouteBySourceDestination(source,destination);
+        List<Routes> routesList=routesRepo.findRouteBySourceDestination(source,destination,city);
 
         List<Routes> routes=new ArrayList<>();
 
@@ -112,11 +118,48 @@ public class UserService {
           route.setVechile(vechile);
           routes.add(route);
         }
-
         return new ApiResponseModel<>(StatusResponse.success,routes,"Routes Found");
     }
 
 
+    public ApiResponseModel createBooking(int routeId,User user)
+    {
+        Optional<Routes> routesOptional=routesRepo.findById(routeId);
+        List<User> userList=new ArrayList<>();
+        
+        if(routesOptional.isPresent())
+        {
+            Routes routes=routesOptional.get();
+            Vechile vechile=routesRepo.findVechileByRouteNo(routeId);
+            Bookings bookings=bookingRepo.findBookingsByRouteId(routeId);
+
+            if(vechile.getAvailable_capacity()==0)
+            {
+                return new ApiResponseModel<>(StatusResponse.failed,null,"Vechile is full");
+            }
+
+            if(bookings!=null)
+            {
+                userList.add(user);
+                bookings.setUsers(userList);
+            }else{
+                bookings=new Bookings();
+                bookings.setRoutes(routes);
+                bookings.setUsers(userList);
+            }
+            bookingRepo.save(bookings);
+            return new ApiResponseModel<>(StatusResponse.success,null,"Booking conformed");
+
+        }else {
+            return new ApiResponseModel<>(StatusResponse.failed,null,"Route not found");
+        }
+    }
+
+    private ApiResponseModel<List<String>> cityList()
+    {
+        List<String> cityList=officeRepo.findDistinctCities();
+        return new ApiResponseModel<>(StatusResponse.success,cityList,"City List");
+    }
 
     private String saveLicenceImage(MultipartFile file, String emailId) throws IOException {
         File directory = new File(LICENCE_DIR);
@@ -128,5 +171,6 @@ public class UserService {
 
         return filePath.toAbsolutePath().toString();
     }
+
 
 }

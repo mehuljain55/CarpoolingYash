@@ -27,6 +27,7 @@ public class Vechile {
     private int  available_capacity;
     private DocumentStatus rc_status;
 
+
     public Vechile(String vechileNo, String rcPath, User user, VechileType vechileType, VechileStatus status, int max_capacity, int available_capacity) {
         this.vechileNo = vechileNo;
         this.rcPath = rcPath;

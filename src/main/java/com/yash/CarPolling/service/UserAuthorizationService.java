@@ -1,11 +1,13 @@
 package com.yash.CarPolling.service;
 
+import com.yash.CarPolling.entity.Office;
 import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.enums.StatusResponse;
 import com.yash.CarPolling.entity.enums.UserRoles;
 import com.yash.CarPolling.entity.enums.UserStatus;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
 import com.yash.CarPolling.entity.models.UserLoginModel;
+import com.yash.CarPolling.repository.OfficeRepo;
 import com.yash.CarPolling.repository.UserRepo;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,18 @@ public class UserAuthorizationService {
     private UserRepo userRepo;
 
     @Autowired
+    private OfficeRepo officeRepo;
+
+    @Autowired
     private  JwtUtils jwtUtils;
 
-    public ApiResponseModel addUser(User user)
+    public ApiResponseModel addUser(User user,String officeId)
     {
 
         try {
             Optional<User> optionalUser=userRepo.findById(user.getEmailId());
+            Optional<Office> officeOptional=officeRepo.findById(officeId);
+            Office office=officeOptional.get();
             if(optionalUser.isPresent())
             {
                 return new ApiResponseModel(StatusResponse.failed,null ,"User Already Present");
@@ -35,7 +42,7 @@ public class UserAuthorizationService {
             user.setRole(UserRoles.user);
             user.setStatus(UserStatus.not_active);
             user.setPassword(hashPassword(user.getPassword()));
-            user.setOfficeId("YIT");
+            user.setOfficeId(officeId);
             System.out.println(user);
             userRepo.save(user);
             return new ApiResponseModel(StatusResponse.success,null ,"Trainer Added");
