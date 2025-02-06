@@ -1,5 +1,6 @@
 package com.yash.CarPolling.repository;
 
+import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.Vechile;
 import com.yash.CarPolling.entity.enums.VechileStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,9 @@ public interface VechileRepo extends JpaRepository<Vechile,String> {
 
     @Query("SELECT v FROM Vechile v WHERE v.user.emailId = :emailId AND v.status = :status")
     List<Vechile> findVechileByEmailAndStatus(@Param("emailId") String emailId, @Param("status") VechileStatus status);
+
+    @Query("SELECT v.user FROM Vechile v WHERE v.vechileNo = :vechileNo")
+    User findUserByVechileNo(String vechileNo);
 
 
 

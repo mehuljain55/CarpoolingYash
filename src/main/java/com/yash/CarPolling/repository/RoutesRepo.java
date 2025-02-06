@@ -14,7 +14,7 @@ import java.util.List;
 public interface RoutesRepo extends JpaRepository<Routes,Integer> {
 
 
-    @Query("SELECT r FROM Routes r JOIN r.pickUpPlaces p WHERE p.places = :places AND r.destination = :destination AND r.city=:city")
+    @Query("SELECT r FROM Routes r JOIN r.pickUpPlaces p WHERE (p.places = :places OR r.source=:places) AND r.destination = :destination AND r.city=:city")
     List<Routes> findRouteBySourceDestination(@Param("places") String places, @Param("destination") String destination,@Param("city") String city);
 
 

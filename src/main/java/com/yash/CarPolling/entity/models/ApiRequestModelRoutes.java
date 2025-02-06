@@ -8,6 +8,7 @@ public class ApiRequestModelRoutes {
     private String token;
     private Routes routes;
     private String vechileNo;
+    private String city;
 
     public ApiRequestModelRoutes(User user, String token, Routes routes, String vechileNo) {
         this.user = user;
@@ -49,6 +50,14 @@ public class ApiRequestModelRoutes {
 
     public void setVechileNo(String vechileNo) {
         this.vechileNo = vechileNo;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     @Override

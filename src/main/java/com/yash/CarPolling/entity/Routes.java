@@ -1,6 +1,7 @@
 package com.yash.CarPolling.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.yash.CarPolling.entity.enums.BookingType;
 import com.yash.CarPolling.entity.enums.RouteStatus;
 import jakarta.persistence.*;
 
@@ -23,6 +24,8 @@ public class Routes {
     private String source;
     private String destination;
     private String city;
+    @Enumerated(EnumType.STRING)
+    private BookingType bookingType;
 
 
     @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -141,5 +144,13 @@ public class Routes {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public BookingType getBookingType() {
+        return bookingType;
+    }
+
+    public void setBookingType(BookingType bookingType) {
+        this.bookingType = bookingType;
     }
 }

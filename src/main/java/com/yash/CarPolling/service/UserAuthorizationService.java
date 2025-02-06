@@ -2,6 +2,7 @@ package com.yash.CarPolling.service;
 
 import com.yash.CarPolling.entity.Office;
 import com.yash.CarPolling.entity.User;
+import com.yash.CarPolling.entity.enums.BookingStatus;
 import com.yash.CarPolling.entity.enums.StatusResponse;
 import com.yash.CarPolling.entity.enums.UserRoles;
 import com.yash.CarPolling.entity.enums.UserStatus;
@@ -43,7 +44,7 @@ public class UserAuthorizationService {
             user.setStatus(UserStatus.not_active);
             user.setPassword(hashPassword(user.getPassword()));
             user.setOfficeId(officeId);
-            System.out.println(user);
+            user.setBookingStatus(BookingStatus.not_booked);
             userRepo.save(user);
             return new ApiResponseModel(StatusResponse.success,null ,"Trainer Added");
         }catch (Exception e)

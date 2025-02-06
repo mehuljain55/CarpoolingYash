@@ -2,9 +2,7 @@ package com.yash.CarPolling.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.yash.CarPolling.entity.enums.DocumentStatus;
-import com.yash.CarPolling.entity.enums.UserRoles;
-import com.yash.CarPolling.entity.enums.UserStatus;
+import com.yash.CarPolling.entity.enums.*;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class User {
 
 
     @ManyToOne
-    @JoinColumn(name = "booking_id")
+    @JoinColumn(name = "booking_id", nullable = true)
     @JsonBackReference
     private Bookings bookings;
 
@@ -35,11 +33,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
+    @Enumerated(EnumType.STRING)
+    private BookingStatus bookingStatus;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Vechile> vechileList;
 
     private String officeId;
+
+    @Transient
+    private BuddyTag buddyTag;
 
     public User(String emailId, String name, String mobileNo, String password, String licenceNo, DocumentStatus licence, String licencePath, Bookings bookings, UserRoles role, UserStatus status, List<Vechile> vechileList, String officeId) {
         this.emailId = emailId;
@@ -153,6 +157,14 @@ public class User {
 
     public void setLicencePath(String licencePath) {
         this.licencePath = licencePath;
+    }
+
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
+    }
+
+    public void setBookingStatus(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 
     @Override

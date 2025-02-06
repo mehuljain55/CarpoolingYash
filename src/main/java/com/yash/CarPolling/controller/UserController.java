@@ -2,11 +2,12 @@ package com.yash.CarPolling.controller;
 
 import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.enums.StatusResponse;
+import com.yash.CarPolling.entity.enums.VechileStatus;
+import com.yash.CarPolling.entity.models.ApiRequestModel;
 import com.yash.CarPolling.entity.models.ApiRequestModelBooking;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
-import com.yash.CarPolling.service.OfficeService;
-import com.yash.CarPolling.service.UserAuthorizationService;
-import com.yash.CarPolling.service.UserService;
+import com.yash.CarPolling.repository.UserRepo;
+import com.yash.CarPolling.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,13 @@ public class UserController {
 
     @Autowired
     private OfficeService officeService;
+
+    @Autowired
+    private VechileService vechileService;
+
+    @Autowired
+    private BookingService bookingService;
+
 
     @PostMapping("/register")
     public ApiResponseModel<String> userRegistration(@RequestPart("user") User user,
@@ -42,21 +50,57 @@ public class UserController {
         return officeService.officeList();
     }
 
-
-
-
-
     @PostMapping("/createBooking")
     public ApiResponseModel createBooking(@RequestBody ApiRequestModelBooking apiRequestModelBooking) {
 
         boolean status=userAuthorizationService.validateUserToken(apiRequestModelBooking.getUser().getEmailId(),apiRequestModelBooking.getToken());
         if(status)
         {
-            return  userService.createBooking(apiRequestModelBooking.getRouteId(),apiRequestModelBooking.getUser());
+            return  bookingService.createBooking(apiRequestModelBooking.getRouteId(),apiRequestModelBooking.getUser());
         }else {
             return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
         }
     }
+
+    @PostMapping("/getVechileList")
+    public ApiResponseModel getVechileList(@RequestBody ApiRequestModel apiRequestModel) {
+
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModel.getUser().getEmailId(),apiRequestModel.getToken());
+
+        if(status)
+        {
+            return  vechileService.findVechileByUserandStatus(apiRequestModel.getUser(), VechileStatus.approved);
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
+
+    @PostMapping("/getBuddiesInfo")
+    public ApiResponseModel getBuddiesInfo(@RequestBody ApiRequestModel apiRequestModel) {
+
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModel.getUser().getEmailId(),apiRequestModel.getToken());
+
+        if(status)
+        {
+            return  bookingService.getBuddiesInformation(apiRequestModel.getUser().getEmailId());
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
+
+    @PostMapping("/cancelBooking")
+    public ApiResponseModel cancelBooking(@RequestBody ApiRequestModel apiRequestModel) {
+
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModel.getUser().getEmailId(),apiRequestModel.getToken());
+
+        if(status)
+        {
+            return  bookingService.cancelBooking(apiRequestModel.getUser().getEmailId());
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
+
 
 
 }
