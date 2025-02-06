@@ -30,6 +30,9 @@ public class BookingService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired
+    private PickUpPlacesRepo pickUpPlacesRepo;
+
     public ApiResponseModel createBooking(int routeId, User user)
     {
         Optional<Routes> routesOptional=routesRepo.findById(routeId);
@@ -87,6 +90,8 @@ public class BookingService {
         }
     }
 
+
+
     public ApiResponseModel getBuddiesInformation(String userId)
     {
 
@@ -131,17 +136,71 @@ public class BookingService {
 
     }
 
-    public ApiResponseModel cancelBooking(String emailId)
+    public ApiResponseModel findMyBooking(String emailId)
     {
-        Optional<User> userOptional=userRepo.findById(emailId);
-        User user=userOptional.get();
-        user.setBookingStatus(BookingStatus.not_booked);
-        user.setBookings(null);
-        userRepo.save(user);
-        return new ApiResponseModel<>(StatusResponse.success,null,"Booking cancelled successfully");
+        Bookings bookings=userRepo.findBookingByEmailId(emailId);
+        bookings.setUsers(null);
 
-
+        return new ApiResponseModel<>(StatusResponse.success,bookings,"Booking found");
     }
 
+    public ApiResponseModel cancelBooking(String emailId)
+    {
+        try {
+            Optional<User> userOptional = userRepo.findById(emailId);
+            User user = userOptional.get();
+
+            if(user.getBookingStatus().equals(BookingStatus.not_booked)|| user.getBookingStatus()==null)
+            {
+                return new ApiResponseModel<>(StatusResponse.failed,null,"No booking found");
+            }
+
+            int bookingId=userRepo.findBookingIdByEmailId(emailId);
+            int routeId=bookingRepo.findRouteIdByBookingId(bookingId);
+            Vechile vechile=routesRepo.findVechileByRouteNo(routeId);
+            int avaibaleCapacity=vechile.getAvailable_capacity()+1;
+
+            if(vechile.getUser().getEmailId().equals(emailId)) {
+                Optional<Routes> routesOptional = routesRepo.findById(routeId);
+                Bookings bookings = bookingRepo.findBookingsByRouteId(routeId);
+                Routes routes = routesOptional.get();
+                List<User> userList = bookingRepo.findUsersByRouteId(routeId);
+
+                for (User userRequest : userList) {
+                    userRequest.setBookings(null);
+                    updateUserBookingStatus(userRequest, BookingStatus.not_booked);
+                }
+
+                vechile.setAvailable_capacity(vechile.getMax_capacity());
+                bookingRepo.delete(bookings);
+                routesRepo.delete(routes);
+                vechileRepo.save(vechile);
+                return new ApiResponseModel<>(StatusResponse.success,null,"Route removed");
+            }
+
+            if(avaibaleCapacity<=vechile.getMax_capacity())
+            {
+                vechile.setAvailable_capacity(avaibaleCapacity);
+            }else{
+                vechile.setAvailable_capacity(vechile.getMax_capacity());
+            }
+            user.setBookings(null);
+            updateUserBookingStatus(user,BookingStatus.not_booked);
+            userRepo.save(user);
+            vechileRepo.save(vechile);
+            return new ApiResponseModel<>(StatusResponse.success, null, "Booking cancelled successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new ApiResponseModel<>(StatusResponse.failed, null, "Unable to cancel booking");
+
+        }
+    }
+
+    public void updateUserBookingStatus(User user,BookingStatus status)
+    {
+        user.setBookingStatus(status);
+        userRepo.save(user);
+    }
 
 }

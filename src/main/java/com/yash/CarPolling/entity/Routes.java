@@ -28,7 +28,7 @@ public class Routes {
     private BookingType bookingType;
 
 
-    @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "routes", cascade = CascadeType.ALL, orphanRemoval = true ,fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<PickUpPlaces> pickUpPlaces;
 

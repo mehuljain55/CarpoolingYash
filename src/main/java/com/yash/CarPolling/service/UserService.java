@@ -80,6 +80,8 @@ public class UserService {
     {
 
         Optional<Vechile> vechileOptional=vechileRepo.findById(vechileNo);
+        List<User> userList=new ArrayList<>();
+        userList.add(user);
         try {
             if(user.getBookingStatus().equals(BookingStatus.booked))
             {
@@ -97,7 +99,7 @@ public class UserService {
             routes.setVechile(vechile);
             routes.setUser(user);
             Routes saveRoute=routesRepo.save(routes);
-            bookingService.createBooking(saveRoute.getRouteId(),user);
+
 
             for(PickUpPlaces place:pickUpPlacesList)
             {
@@ -108,6 +110,13 @@ public class UserService {
                 pickUpPlacesRepo.save(place);
             }
 
+            Bookings bookingRequest=new Bookings();
+            bookingRequest.setRoutes(saveRoute);;
+
+            Bookings  bookings=bookingRepo.save(bookingRequest);
+            user.setBookings(bookings);
+            user.setBookingStatus(BookingStatus.booked);
+            userRepo.save(user);
 
 
             System.out.println("Route saved");

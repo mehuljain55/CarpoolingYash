@@ -88,6 +88,23 @@ public class UserController {
         }
     }
 
+    @PostMapping("/findMyBookings")
+    public ApiResponseModel findMyBookings(@RequestBody ApiRequestModel apiRequestModel) {
+
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModel.getUser().getEmailId(),apiRequestModel.getToken());
+
+        if(status) {
+
+            return bookingService.findMyBooking(apiRequestModel.getUser().getEmailId());
+
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
+
+
+
+
     @PostMapping("/cancelBooking")
     public ApiResponseModel cancelBooking(@RequestBody ApiRequestModel apiRequestModel) {
 
