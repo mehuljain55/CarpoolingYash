@@ -11,6 +11,7 @@ import com.yash.CarPolling.entity.enums.VechileStatus;
     private String token;
     private Vechile vechile;
     private VechileStatus vechileStatus;
+    private String officeId;
 
      public ApiRequestModel(User user, String token, Vechile vechile, VechileStatus vechileStatus) {
          this.user = user;
@@ -49,5 +50,13 @@ import com.yash.CarPolling.entity.enums.VechileStatus;
 
      public void setVechileStatus(VechileStatus vechileStatus) {
          this.vechileStatus = vechileStatus;
+     }
+
+     public String getOfficeId() {
+         return officeId;
+     }
+
+     public void setOfficeId(String officeId) {
+         this.officeId = officeId;
      }
  }

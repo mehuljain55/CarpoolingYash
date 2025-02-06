@@ -139,9 +139,13 @@ public class BookingService {
     public ApiResponseModel findMyBooking(String emailId)
     {
         Bookings bookings=userRepo.findBookingByEmailId(emailId);
-        bookings.setUsers(null);
+         if(bookings!=null) {
+             bookings.setUsers(null);
+             return new ApiResponseModel<>(StatusResponse.success, bookings, "Booking found");
+         }else {
+             return new ApiResponseModel<>(StatusResponse.not_found, bookings, "Booking found");
 
-        return new ApiResponseModel<>(StatusResponse.success,bookings,"Booking found");
+         }
     }
 
     public ApiResponseModel cancelBooking(String emailId)

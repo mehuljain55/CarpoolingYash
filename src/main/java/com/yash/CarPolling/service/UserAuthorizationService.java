@@ -42,11 +42,11 @@ public class UserAuthorizationService {
 
             user.setRole(UserRoles.user);
             user.setStatus(UserStatus.not_active);
+            user.setBookingStatus(BookingStatus.not_booked);
             user.setPassword(hashPassword(user.getPassword()));
             user.setOfficeId(officeId);
-            user.setBookingStatus(BookingStatus.not_booked);
             userRepo.save(user);
-            return new ApiResponseModel(StatusResponse.success,null ,"Trainer Added");
+            return new ApiResponseModel(StatusResponse.success,null ,"User Added");
         }catch (Exception e)
         {
             e.printStackTrace();

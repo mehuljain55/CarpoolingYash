@@ -27,6 +27,10 @@ public class Vechile {
     private int  available_capacity;
     private DocumentStatus rc_status;
 
+    @Transient
+    private String image;
+
+
 
     public Vechile(String vechileNo, String rcPath, User user, VechileType vechileType, VechileStatus status, int max_capacity, int available_capacity) {
         this.vechileNo = vechileNo;
@@ -111,5 +115,13 @@ public class Vechile {
 
     public void setVechileName(String vechileName) {
         this.vechileName = vechileName;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
