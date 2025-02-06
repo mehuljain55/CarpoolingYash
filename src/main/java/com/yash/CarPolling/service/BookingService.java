@@ -149,13 +149,13 @@ public class BookingService {
         try {
             Optional<User> userOptional = userRepo.findById(emailId);
             User user = userOptional.get();
+            Integer bookingId=userRepo.findBookingIdByEmailId(emailId);
 
-            if(user.getBookingStatus().equals(BookingStatus.not_booked)|| user.getBookingStatus()==null)
+            if(user.getBookingStatus().equals(BookingStatus.not_booked)|| bookingId==null)
             {
                 return new ApiResponseModel<>(StatusResponse.failed,null,"No booking found");
             }
 
-            int bookingId=userRepo.findBookingIdByEmailId(emailId);
             int routeId=bookingRepo.findRouteIdByBookingId(bookingId);
             Vechile vechile=routesRepo.findVechileByRouteNo(routeId);
             int avaibaleCapacity=vechile.getAvailable_capacity()+1;
