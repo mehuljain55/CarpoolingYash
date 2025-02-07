@@ -1,8 +1,10 @@
 package com.yash.CarPolling.service;
 
+import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.Vechile;
 import com.yash.CarPolling.entity.enums.DocumentStatus;
 import com.yash.CarPolling.entity.enums.StatusResponse;
+import com.yash.CarPolling.entity.enums.UserStatus;
 import com.yash.CarPolling.entity.enums.VechileStatus;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
 import com.yash.CarPolling.repository.UserRepo;
@@ -30,7 +32,7 @@ public class ManagerService {
     private VechileRepo vechileRepo;
 
 
-    public ApiResponseModel getUserListPending(String officeId) {
+    public ApiResponseModel getUserVechileListPending(String officeId) {
         List<Vechile> vechileList = vechileRepo.findVechileDocumentStatus(DocumentStatus.updated, VechileStatus.pending, officeId);
         List<Vechile> finalVechileList = new ArrayList<>();
 
@@ -43,6 +45,26 @@ public class ManagerService {
 
         return new ApiResponseModel<>(StatusResponse.success, finalVechileList, "VechileList found");
     }
+
+
+    public ApiResponseModel updateUserStatus(String email,UserStatus status) {
+       Optional<User> userOptional=userRepo.findById(email);
+       if(userOptional.isPresent()) {
+           User user = userOptional.get();
+           user.setStatus(status);
+           userRepo.save(user);
+           return new ApiResponseModel<>(StatusResponse.success, null, "Status Updated");
+       }else {
+           return new ApiResponseModel<>(StatusResponse.failed,null,"User not found");
+       }
+    }
+
+
+    public ApiResponseModel getUserListPending(String officeId) {
+        List<User> userList = userRepo.findUserByStatusandOffice(UserStatus.not_active,officeId);
+        return new ApiResponseModel<>(StatusResponse.success, userList, "User List found");
+    }
+
 
     public ApiResponseModel updateVechileStatus(String vechileNo,VechileStatus vechileStatus) {
         Optional<Vechile> optionalVechile=vechileRepo.findById(vechileNo);

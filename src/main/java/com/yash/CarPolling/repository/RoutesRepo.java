@@ -18,6 +18,10 @@ public interface RoutesRepo extends JpaRepository<Routes,Integer> {
     List<Routes> findRouteBySourceDestination(@Param("places") String places, @Param("destination") String destination,@Param("city") String city);
 
 
+    @Query("SELECT r FROM Routes r where r.destination = :destination ")
+    List<Routes> findRouteByDestination(@Param("destination") String destination);
+
+
     @Query("SELECT r.vechile FROM Routes r WHERE r.routeId=:routeId")
     Vechile findVechileByRouteNo(@Param("routeId") int routeId);
 

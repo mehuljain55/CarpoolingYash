@@ -171,7 +171,13 @@ public class UserService {
 
     public  ApiResponseModel findRoutes(String source,String destination,String city)
     {
-        List<Routes> routesList=routesRepo.findRouteBySourceDestination(source,destination,city);
+        List<Routes> routesList=new ArrayList<>();
+        if(source.equals(""))
+        {
+            routesList=routesRepo.findRouteByDestination(destination);
+        }else {
+            routesList=routesRepo.findRouteBySourceDestination(source,destination,city);
+        }
 
         List<Routes> routes=new ArrayList<>();
 

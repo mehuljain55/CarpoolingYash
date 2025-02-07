@@ -33,7 +33,7 @@ public class ManagerController {
      boolean status=userAuthorizationService.validateUserAccess(apiRequestModel.getUser(),apiRequestModel.getToken(),role);
      if(status)
      {
-       return managerService.getUserListPending(apiRequestModel.getOfficeId());
+       return managerService.getUserVechileListPending(apiRequestModel.getOfficeId());
      }else {
          return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized Access");
      }
@@ -51,6 +51,33 @@ public class ManagerController {
             return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized Access");
         }
     }
+
+
+
+    @PostMapping("/userApprovalList")
+    public ApiResponseModel userApproval(@RequestBody ApiRequestModel apiRequestModel)
+    {
+        boolean status=userAuthorizationService.validateUserAccess(apiRequestModel.getUser(),apiRequestModel.getToken(),role);
+        if(status)
+        {
+            return managerService.getUserListPending(apiRequestModel.getUser().getOfficeId());
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized Access");
+        }
+    }
+
+    @PostMapping("/updateUserStatus")
+    public ApiResponseModel updateUserStatus(@RequestBody ApiRequestModel apiRequestModel)
+    {
+        boolean status=userAuthorizationService.validateUserAccess(apiRequestModel.getUser(),apiRequestModel.getToken(),role);
+        if(status)
+        {
+            return managerService.updateUserStatus(apiRequestModel.getEmailId(), apiRequestModel.getStatus());
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized Access");
+        }
+    }
+
     }
 
 

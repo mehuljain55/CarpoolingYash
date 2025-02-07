@@ -113,7 +113,7 @@ public class UserController {
         boolean status=userAuthorizationService.validateUserToken(apiRequestModel.getUser().getEmailId(),apiRequestModel.getToken());
         if(status)
         {
-            return  bookingService.findBookingRequest(apiRequestModel.getUser());
+            return  bookingService.updateBookingRequest(apiRequestModel.getBookingRequestId(),apiRequestModel.getRequestStatus());
         }else {
             return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
         }

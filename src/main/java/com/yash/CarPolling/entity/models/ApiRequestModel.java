@@ -3,6 +3,8 @@
 
 import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.Vechile;
+import com.yash.CarPolling.entity.enums.RequestStatus;
+import com.yash.CarPolling.entity.enums.UserStatus;
 import com.yash.CarPolling.entity.enums.VechileStatus;
 
  public class ApiRequestModel {
@@ -12,6 +14,10 @@ import com.yash.CarPolling.entity.enums.VechileStatus;
     private Vechile vechile;
     private VechileStatus vechileStatus;
     private String officeId;
+    private int bookingRequestId;
+    private RequestStatus requestStatus;
+    private UserStatus status;
+    private String emailId;
 
      public ApiRequestModel(User user, String token, Vechile vechile, VechileStatus vechileStatus) {
          this.user = user;
@@ -58,5 +64,37 @@ import com.yash.CarPolling.entity.enums.VechileStatus;
 
      public void setOfficeId(String officeId) {
          this.officeId = officeId;
+     }
+
+     public int getBookingRequestId() {
+         return bookingRequestId;
+     }
+
+     public void setBookingRequestId(int bookingRequestId) {
+         this.bookingRequestId = bookingRequestId;
+     }
+
+     public RequestStatus getRequestStatus() {
+         return requestStatus;
+     }
+
+     public void setRequestStatus(RequestStatus requestStatus) {
+         this.requestStatus = requestStatus;
+     }
+
+     public UserStatus getStatus() {
+         return status;
+     }
+
+     public void setStatus(UserStatus status) {
+         this.status = status;
+     }
+
+     public String getEmailId() {
+         return emailId;
+     }
+
+     public void setEmailId(String emailId) {
+         this.emailId = emailId;
      }
  }
