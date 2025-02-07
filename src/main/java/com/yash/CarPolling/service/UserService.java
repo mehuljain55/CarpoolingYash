@@ -3,6 +3,7 @@ package com.yash.CarPolling.service;
 import com.yash.CarPolling.entity.*;
 import com.yash.CarPolling.entity.enums.*;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
+import com.yash.CarPolling.entity.models.UserLoginModel;
 import com.yash.CarPolling.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,6 @@ public class UserService {
     @Autowired
     private BookingService bookingService;
 
-
-
     private static final String LICENCE_DIR = "src/main/resources/Licence/";
 
 
@@ -59,7 +58,6 @@ public class UserService {
         try {
 
             if(file!=null) {
-                System.out.println("Image Upload");
                 String path= saveLicenceImage(file, user.getEmailId());
                 user.setLicencePath(path);
                 user.setLicence(DocumentStatus.updated);
@@ -76,8 +74,50 @@ public class UserService {
         }
     }
 
+    public ApiResponseModel<UserLoginModel> updateLicence(String email,String licenceNo ,MultipartFile file)
+    {
+        Optional<User> userOptional=userRepo.findById(email);
+        if(userOptional.isPresent())
+        {
+            User user=userOptional.get();
+            try {
+
+                if(file!=null) {
+                    String path= saveLicenceImage(file, user.getEmailId());
+                    user.setLicencePath(path);
+                    user.setLicence(DocumentStatus.updated);
+                    user.setLicenceNo(licenceNo);
+                }else {
+                    user.setLicence(DocumentStatus.not_updated);
+                }
+               User saveUser=userRepo.save(user);
+                UserLoginModel userLoginModel=new UserLoginModel(saveUser,"null");
+                return new ApiResponseModel<>(StatusResponse.success,userLoginModel,"Licence Updated");
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+                return new ApiResponseModel<>(StatusResponse.failed,null,"Unable to add user");
+            }
+
+
+        }else {
+            return new ApiResponseModel<>(StatusResponse.failed,null,"USer not found");
+        }
+
+
+    }
+
+
+
     public ApiResponseModel addRoutes(User user, Routes routes,String vechileNo,String city)
     {
+        Optional<User> optionalUser=userRepo.findById(user.getEmailId());
+        User checkUser=optionalUser.get();
+        if(checkUser.getLicence().equals(DocumentStatus.updated))
+        {
+            return new ApiResponseModel<>(StatusResponse.failed,null,"Update Licence information first");
+        }
 
         Optional<Vechile> vechileOptional=vechileRepo.findById(vechileNo);
         List<User> userList=new ArrayList<>();
@@ -116,10 +156,10 @@ public class UserService {
             Bookings  bookings=bookingRepo.save(bookingRequest);
             user.setBookings(bookings);
             user.setBookingStatus(BookingStatus.booked);
+            int available_capacity=vechile.getAvailable_capacity()-1;
+            vechile.setAvailable_capacity(available_capacity);
             userRepo.save(user);
-
-
-            System.out.println("Route saved");
+            vechileRepo.save(vechile);
             return  new ApiResponseModel<>(StatusResponse.success,null,"Routes added");
 
         }catch (Exception e)

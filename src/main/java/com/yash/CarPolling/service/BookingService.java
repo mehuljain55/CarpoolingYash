@@ -80,9 +80,12 @@ public class BookingService {
                 Bookings booking=bookingRepo.save(bookings);
                 user.setBookings(booking);
             }
+            int available_capacity=vechile.getAvailable_capacity()-1;
+            vechile.setAvailable_capacity(available_capacity);
             user.setBookingStatus(BookingStatus.booked);
             bookingRepo.save(bookings);
             userRepo.save(user);
+            vechileRepo.save(vechile);
             return new ApiResponseModel<>(StatusResponse.success,null,"Booking conformed");
 
         }else {

@@ -6,7 +6,7 @@ import com.yash.CarPolling.entity.enums.VechileStatus;
 import com.yash.CarPolling.entity.models.ApiRequestModel;
 import com.yash.CarPolling.entity.models.ApiRequestModelBooking;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
-import com.yash.CarPolling.repository.UserRepo;
+import com.yash.CarPolling.entity.models.UserLoginModel;
 import com.yash.CarPolling.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +42,39 @@ public class UserController {
     @GetMapping("/login")
     public ApiResponseModel validateUserLogin(@RequestParam("emailId") String emailId, @RequestParam("password") String password) {
         return userAuthorizationService.validateUserLogin(emailId, password);
+    }
+
+    @PostMapping("/updateLicence")
+    public ApiResponseModel<UserLoginModel> updateLicence(@RequestPart("user") User user,
+                                                          @RequestPart("licenceNo") String licenceNo,
+                                                          @RequestPart("token") String token,
+                                                          @RequestPart(value = "licenceImage", required = true) MultipartFile licenceImage){
+
+        boolean status=userAuthorizationService.validateUserToken(user.getEmailId(),token);
+        if (status) {
+            return userService.updateLicence(user.getEmailId(),licenceNo,licenceImage);
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
+
+
+
+
+    @GetMapping ("/validate_token")
+    public ApiResponseModel validateUserToken(@RequestParam("userId") String userId,@RequestParam("token") String token)
+    {
+        boolean status=userAuthorizationService.validateUserToken(userId,token);
+        ApiResponseModel apiResponseModel;
+        if(status)
+        {
+            apiResponseModel=new ApiResponseModel<>(StatusResponse.authorized,null,"Valid token");
+        }
+        else {
+            apiResponseModel=new ApiResponseModel<>(StatusResponse.unauthorized,null,"Invalid token");
+        }
+
+        return apiResponseModel;
     }
 
 
@@ -101,9 +134,6 @@ public class UserController {
             return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
         }
     }
-
-
-
 
     @PostMapping("/cancelBooking")
     public ApiResponseModel cancelBooking(@RequestBody ApiRequestModel apiRequestModel) {
