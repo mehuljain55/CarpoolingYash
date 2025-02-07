@@ -57,9 +57,19 @@ public class BookingService {
 
             if(routes.getBookingType().equals(BookingType.reserved))
             {
+                System.out.println("Request reserved");
+                List<BookingRequest> bookingRequestCheck=bookingRequestRepo.findBookingRequestEmployeeandRouteId(user.getEmailId(),routes.getRouteId(),RequestStatus.pending);
+
+                if(bookingRequestCheck.size()>0)
+                {
+                    return new ApiResponseModel<>(StatusResponse.failed,null,"User already request wait for approval");
+                }
+
                 User vechileOwner=vechileRepo.findUserByVechileNo(vechile.getVechileNo());
                 BookingRequest bookingRequest=new BookingRequest();
                 bookingRequest.setName(user.getName());
+                bookingRequest.setRouteId(routes.getRouteId());
+                bookingRequest.setBookingId(bookings.getBookingId());
                 bookingRequest.setEmployeeID(user.getEmailId());
                 bookingRequest.setOwnerEmployeeId(vechileOwner.getEmailId());
                 bookingRequest.setRequestStatus(RequestStatus.pending);
@@ -201,6 +211,65 @@ public class BookingService {
             e.printStackTrace();
             return new ApiResponseModel<>(StatusResponse.failed, null, "Unable to cancel booking");
 
+        }
+    }
+
+    public ApiResponseModel findBookingRequest(User user)
+    {
+        List<BookingRequest> bookingRequestList=bookingRequestRepo.findBookingRequestOwner(user.getEmailId(),RequestStatus.pending);
+        if(bookingRequestList.size()>0)
+        {
+            return new ApiResponseModel<>(StatusResponse.success, bookingRequestList, "Booking Requests found");
+        }else {
+            return new ApiResponseModel<>(StatusResponse.not_found, null, "No request found");
+        }
+
+    }
+
+    public ApiResponseModel updateBookingRequest(int requestId,RequestStatus requestStatus)
+    {
+        Optional<BookingRequest> optionalBookingRequest=bookingRequestRepo.findById(requestId);
+
+        if(optionalBookingRequest.isPresent()) {
+            BookingRequest bookingRequest = optionalBookingRequest.get();
+             Bookings bookings=userRepo.findBookingByEmailId(bookingRequest.getEmployeeID());
+             if(bookings!=null)
+             {
+                 bookingRequest.setRequestStatus(RequestStatus.rejected);
+                 bookingRequest.setMessage("User already have booking request cancelled by system");
+                 bookingRequestRepo.save(bookingRequest);
+                 return new ApiResponseModel<>(StatusResponse.failed,null,"User already booked");
+             }else{
+                 bookingRequest.setMessage("Booking "+requestStatus.toString()+" by owner");
+                  if(requestStatus.equals(RequestStatus.accepted))
+                  {
+                      Bookings userBooking=bookingRepo.findBookingsByBookingId(bookingRequest.getBookingId());
+                      if(userBooking==null)
+                      {
+                          bookingRequest.setRequestStatus(RequestStatus.rejected);
+                          bookingRequest.setMessage("Booking does not exists request cancelled by system");
+                          bookingRequestRepo.save(bookingRequest);
+                          return new ApiResponseModel<>(StatusResponse.failed,null,"Booking does not exists");
+                      }else {
+                        Optional<User> userOptional=userRepo.findById(bookingRequest.getEmployeeID());
+                        User user=userOptional.get();
+                        user.setBookings(userBooking);
+                        bookingRequest.setRequestStatus(RequestStatus.accepted);
+                        bookingRequestRepo.save(bookingRequest);
+                        userRepo.save(user);
+                        return new ApiResponseModel<>(StatusResponse.success,null,"Request updated");
+                      }
+                  }else {
+
+                      bookingRequest.setRequestStatus(RequestStatus.rejected);
+                      bookingRequest.setMessage("Request rejected by user");
+                      bookingRequestRepo.save(bookingRequest);
+                      return new ApiResponseModel<>(StatusResponse.failed,null,"Request rejected");
+
+                  }
+             }
+        }else {
+            return new ApiResponseModel<>(StatusResponse.failed,null,"No request found");
         }
     }
 

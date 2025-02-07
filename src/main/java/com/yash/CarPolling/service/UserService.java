@@ -114,7 +114,7 @@ public class UserService {
     {
         Optional<User> optionalUser=userRepo.findById(user.getEmailId());
         User checkUser=optionalUser.get();
-        if(checkUser.getLicence().equals(DocumentStatus.updated))
+        if(checkUser.getLicence().equals(DocumentStatus.not_updated))
         {
             return new ApiResponseModel<>(StatusResponse.failed,null,"Update Licence information first");
         }

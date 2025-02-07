@@ -95,6 +95,30 @@ public class UserController {
         }
     }
 
+    @PostMapping("/findBookingRequest")
+    public ApiResponseModel findBookingRequest(@RequestBody ApiRequestModel apiRequestModel) {
+
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModel.getUser().getEmailId(),apiRequestModel.getToken());
+        if(status)
+        {
+            return  bookingService.findBookingRequest(apiRequestModel.getUser());
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
+
+    @PostMapping("/updateBookingRequest")
+    public ApiResponseModel updateBookingRequest(@RequestBody ApiRequestModel apiRequestModel) {
+
+        boolean status=userAuthorizationService.validateUserToken(apiRequestModel.getUser().getEmailId(),apiRequestModel.getToken());
+        if(status)
+        {
+            return  bookingService.findBookingRequest(apiRequestModel.getUser());
+        }else {
+            return new ApiResponseModel<>(StatusResponse.unauthorized,null,"Unauthorized access");
+        }
+    }
+
     @PostMapping("/getVechileList")
     public ApiResponseModel getVechileList(@RequestBody ApiRequestModel apiRequestModel) {
 

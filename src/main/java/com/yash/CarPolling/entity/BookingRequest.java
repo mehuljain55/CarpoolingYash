@@ -11,11 +11,14 @@ public class BookingRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int requestId;
 
+    private int bookingId;
+    private int routeId;
     private String employeeID;
     private String name;
     private String ownerEmployeeId;
     @Enumerated(EnumType.STRING)
     private RequestStatus requestStatus;
+    private String message;
 
     public int getRequestId() {
         return requestId;
@@ -55,5 +58,29 @@ public class BookingRequest {
 
     public void setRequestStatus(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public int getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(int routeId) {
+        this.routeId = routeId;
     }
 }
