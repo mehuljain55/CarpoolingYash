@@ -6,6 +6,7 @@ import com.yash.CarPolling.entity.models.ApiResponseModel;
 import com.yash.CarPolling.service.OfficeService;
 import com.yash.CarPolling.service.UserAuthorizationService;
 import com.yash.CarPolling.service.UserService;
+import com.yash.CarPolling.service.VechileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,9 @@ public class RoutesController {
 
     @Autowired
     private OfficeService officeService;
+
+    @Autowired
+    private VechileService vechileService;
 
 
     @PostMapping("/addRoute")
@@ -43,11 +47,16 @@ public class RoutesController {
         return  userService.findRoutes(source,destination,city);
     }
 
+    @GetMapping("/search")
+    public ApiResponseModel searchPlaces(@RequestParam("key") String key,@RequestParam("city") String city)
+    {
+        System.out.println(key+" "+ city);
+        return vechileService.findRoutes(key,city);
+    }
+
     @GetMapping("/cityList")
     public ApiResponseModel findCityList()
     {
         return userService.cityList();
     }
-
-
 }

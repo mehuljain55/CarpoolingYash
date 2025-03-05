@@ -6,6 +6,8 @@ import com.yash.CarPolling.entity.enums.DocumentStatus;
 import com.yash.CarPolling.entity.enums.StatusResponse;
 import com.yash.CarPolling.entity.enums.VechileStatus;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
+import com.yash.CarPolling.repository.PickUpPlacesRepo;
+import com.yash.CarPolling.repository.RoutesRepo;
 import com.yash.CarPolling.repository.VechileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class VechileService {
 
     @Autowired
     private VechileRepo vechileRepo;
+
+    @Autowired
+    private RoutesRepo routesRepo;
+
+    @Autowired
+    private PickUpPlacesRepo pickUpPlacesRepo;
+
 
 
     private static final String VECHILE_DIR = "src/main/resources/RC/";
@@ -74,6 +85,16 @@ public class VechileService {
             e.printStackTrace();
             return new ApiResponseModel<>(StatusResponse.failed,null,"Error in founding vechile");
         }
+    }
+
+    public ApiResponseModel findRoutes(String key,String city)
+    {
+        List<String> sources = routesRepo.searchPlaces(key,city);
+        List<String> places = pickUpPlacesRepo.searchPlaces(key,city);
+        Set<String> results = new HashSet<>();
+        results.addAll(sources);
+        results.addAll(places);
+        return new ApiResponseModel<>(StatusResponse.success,results,"Places found");
     }
 
     private String saveRcImage(MultipartFile file, String vechileNo) throws IOException {

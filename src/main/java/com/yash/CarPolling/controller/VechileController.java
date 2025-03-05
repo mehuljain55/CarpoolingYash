@@ -1,7 +1,6 @@
 package com.yash.CarPolling.controller;
 
 
-import com.yash.CarPolling.entity.User;
 import com.yash.CarPolling.entity.enums.StatusResponse;
 import com.yash.CarPolling.entity.models.ApiRequestModel;
 import com.yash.CarPolling.entity.models.ApiResponseModel;
